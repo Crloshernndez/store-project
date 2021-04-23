@@ -3,17 +3,19 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomePageComponent } from './home-page/home-page.component';
-import { AboutUsPageComponent } from './about-us-page/about-us-page.component';
-import { StorePageComponent } from './store-page/store-page.component';
-import { CoursesPageComponent } from './courses-page/courses-page.component';
-import { CartPageComponent } from './cart-page/cart-page.component';
-import { PaymentPageComponent } from './payment-page/payment-page.component';
-import { PoliticyPageComponent } from './politicy-page/politicy-page.component';
-import { OrdersPageComponent } from './orders-page/orders-page.component';
-import { PageNotFountPageComponent } from './page-not-fount-page/page-not-fount-page.component';
-import { CheckOutPageComponent } from './check-out-page/check-out-page.component';
-import { BlogPageComponent } from './blog-page/blog-page.component';
+import { HomePageComponent } from './modules/home-page/home-page.component';
+import { AboutUsPageComponent } from './modules/about-us-page/about-us-page.component';
+import { StorePageComponent } from './modules/store-page/store-page.component';
+import { CoursesPageComponent } from './modules/courses-page/courses-page.component';
+import { CartPageComponent } from './modules/cart-page/cart-page.component';
+import { PaymentPageComponent } from './modules/payment-page/payment-page.component';
+import { PoliticyPageComponent } from './modules/politicy-page/politicy-page.component';
+import { OrdersPageComponent } from './modules/orders-page/orders-page.component';
+import { PageNotFountPageComponent } from './modules/page-not-fount-page/page-not-fount-page.component';
+import { CheckOutPageComponent } from './modules/check-out-page/check-out-page.component';
+import { BlogPageComponent } from './modules/blog-page/blog-page.component';
+import { HeaderComponent } from './share/components/header/header.component';
+import { FooterComponent } from './share/components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -28,13 +30,12 @@ import { BlogPageComponent } from './blog-page/blog-page.component';
     OrdersPageComponent,
     PageNotFountPageComponent,
     CheckOutPageComponent,
-    BlogPageComponent
+    BlogPageComponent,
+    HeaderComponent,
+    FooterComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
