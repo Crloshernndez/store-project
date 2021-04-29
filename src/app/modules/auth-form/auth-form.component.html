@@ -1,0 +1,80 @@
+<div class="authForm">
+  <div class="authForm__container">
+    <div class="row">
+      <div class="col-xs-12 col-md-6 col-md-offset-3">
+        <app-alert
+          *ngIf="error"
+          [message]="error"
+          (close)="onClose()"
+        ></app-alert>
+        <div *ngIf="loading" style="text-align: center; margin-top: 5vh">
+          <app-loading-spinner></app-loading-spinner>
+        </div>
+        <form
+          #authForm="ngForm"
+          (ngSubmit)="onSubmit(authForm)"
+          *ngIf="!loading"
+        >
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="email">email</label>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                name="email"
+                ngModel
+                required
+                email
+              />
+              <!-- <span class="help-block" *ngIf="email.invalid && email.touched">Enter a valid email</span> -->
+            </div>
+          </div>
+
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="password">password</label>
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                name="password"
+                ngModel
+                required
+                minlength="6"
+              />
+            </div>
+          </div>
+
+          <div class="col-xs-12">
+            <div style="display: flex; justify-content: space-between">
+              <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="!authForm.valid"
+              >
+                {{ isLoginMode ? "Login" : "Sing Up" }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="handleExit()"
+              >
+                Exit
+              </button>
+            </div>
+            <hr />
+            <div style="text-align: center" class="col-xs-12">
+              <a
+                style="cursor: pointer"
+                *ngIf="isLoginMode"
+                (click)="onSwitchMode()"
+                >Register!!!</a
+              >
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
