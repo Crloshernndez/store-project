@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { User } from '../../share/models/user.model';
 
+// interfaz de respuesta desde firebase para authentication
 export interface authResponseData {
   idToken: string;
   email: string;
@@ -20,11 +21,13 @@ export interface authResponseData {
   providedIn: 'root',
 })
 export class AuthService {
+  // propiedades
   user = new BehaviorSubject<User>(null);
   tokenExpirationTimer: any = null;
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  // metodo para registrar usuario
   singUp(email: string, password: string) {
     return this.http
       .post<authResponseData>(
@@ -48,6 +51,7 @@ export class AuthService {
       );
   }
 
+  // metodo para logear usuario
   singIn(email: string, password: string) {
     return this.http
       .post<authResponseData>(
@@ -71,6 +75,7 @@ export class AuthService {
       );
   }
 
+  // metodo para desloguear usuario
   logOut() {
     this.user.next(null);
     localStorage.removeItem('userData');
@@ -80,6 +85,7 @@ export class AuthService {
     this.tokenExpirationTimer = null;
   }
 
+  // metodo para logear automaticamente
   autoLogin() {
     const userData: {
       email: string;
@@ -108,12 +114,14 @@ export class AuthService {
     }
   }
 
+  // metodo para desloguear automaticamente
   autoLogOut(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
       this.logOut();
     }, expirationDuration);
   }
 
+  // metodo para autenticar usuario
   private handleAuthentication(
     email: string,
     id: string,
@@ -128,6 +136,7 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
+  // metodo para manejar errores
   private handleError(resError: HttpErrorResponse) {
     let errorMessage = 'An Unknown Error Occurred!!';
 

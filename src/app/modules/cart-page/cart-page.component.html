@@ -1,4 +1,16 @@
-<p>cart-page works!</p>
-<button class="btn btn-success" type="button" (click)="onClick()">
-  continue
-</button>
+<div class="row">
+  <div style="border: 1px solid white" class="col-xs-7">
+    <h3>Your shopping basket</h3>
+    <hr />
+    <div *ngFor="let product of products">
+      <app-cart-product [product]="product"></app-cart-product>
+      <hr />
+    </div>
+  </div>
+  <div style="border: 1px solid white; margin-left: 70px" class="col-md-4">
+    <app-summary></app-summary>
+    <button class="btn btn-success" type="button" (click)="onClick()">
+      continue
+    </button>
+  </div>
+</div>

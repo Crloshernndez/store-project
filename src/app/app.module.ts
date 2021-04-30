@@ -23,6 +23,10 @@ import { HeroComponent } from './modules/home-page/components/hero/hero.componen
 import { AuthFormComponent } from './modules/auth-form/auth-form.component';
 import { AlertComponent } from './share/components/alert/alert.component';
 import { LoadingSpinnerComponent } from './share/components/loading-spinner/loading-spinner.component';
+import { ProductsComponent } from './modules/store-page/products/products.component';
+import { ProductComponent } from './modules/store-page/products/product/product.component';
+import { CartProductComponent } from './modules/cart-page/cart-product/cart-product.component';
+import { SummaryComponent } from './modules/cart-page/summary/summary.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +49,10 @@ import { LoadingSpinnerComponent } from './share/components/loading-spinner/load
     AuthFormComponent,
     AlertComponent,
     LoadingSpinnerComponent,
+    ProductsComponent,
+    ProductComponent,
+    CartProductComponent,
+    SummaryComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],
