@@ -106,4 +106,11 @@ export class ProductsService {
   getProducts() {
     return this.Products;
   }
+
+  // metodo para obtener un producto por su id
+  getProductById(id: string) {
+    return this.Products.find((p) => {
+      return p.id === id;
+    });
+  }
 }

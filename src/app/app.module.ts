@@ -27,6 +27,7 @@ import { ProductsComponent } from './modules/store-page/products/products.compon
 import { ProductComponent } from './modules/store-page/products/product/product.component';
 import { CartProductComponent } from './modules/cart-page/cart-product/cart-product.component';
 import { SummaryComponent } from './modules/cart-page/summary/summary.component';
+import { ProductDetailComponent } from './modules/store-page/products/product-detail/product-detail.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { SummaryComponent } from './modules/cart-page/summary/summary.component'
     ProductComponent,
     CartProductComponent,
     SummaryComponent,
+    ProductDetailComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],

@@ -9,9 +9,13 @@
     <p>{{ product.quantity }}</p>
   </div>
   <div class="col-md-2">
-    <p>{{ product.price }}</p>
+    <p>$ {{ product.price | number: "1.0-2" }}</p>
   </div>
   <div class="col-md-1">
-    <span class="glyphicon glyphicon-trash"></span>
+    <span
+      style="cursor: pointer"
+      class="glyphicon glyphicon-trash"
+      (click)="onClick(product)"
+    ></span>
   </div>
 </div>

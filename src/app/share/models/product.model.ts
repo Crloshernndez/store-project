@@ -2,23 +2,26 @@ export class Product {
   id: string;
   name: string;
   price: number;
-  description: string;
   image: string;
-  available: boolean;
+  quantity?: number;
+  description?: string;
+  available?: boolean;
 
   constructor(
     id: string,
     name: string,
     price: number,
-    description: string,
     image: string,
-    available: boolean
+    quantity?: number,
+    description?: string,
+    available?: boolean
   ) {
     this.id = id;
     this.name = name;
     this.price = price;
-    this.description = description;
     this.image = image;
+    this.quantity = quantity;
+    this.description = description;
     this.available = available;
   }
 }

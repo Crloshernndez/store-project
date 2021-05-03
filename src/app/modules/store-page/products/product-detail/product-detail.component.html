@@ -1,0 +1,12 @@
+<div class="productDetail">
+  <div class="productDetail__container">
+    <img style="width: 250px" src="{{ product.image }}" />
+    <hr />
+    <h2>{{ product.name }}</h2>
+    <br />
+    <h4>{{ product.description }}</h4>
+    <hr />
+    <h3>$ {{ product.price }}</h3>
+    <button type="button" (click)="onClick()">exit</button>
+  </div>
+</div>

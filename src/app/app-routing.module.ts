@@ -14,6 +14,7 @@ import { PageNotFountPageComponent } from './modules/page-not-fount-page/page-no
 import { LayoutComponent } from './modules/layout/layout.component';
 import { AuthFormComponent } from './modules/auth-form/auth-form.component';
 import { AuthGuardService } from './core/guards/auth-guard.service';
+import { ProductDetailComponent } from './modules/store-page/products/product-detail/product-detail.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,10 @@ const routes: Routes = [
       {
         path: 'store',
         component: StorePageComponent,
+      },
+      {
+        path: 'product/:id',
+        component: ProductDetailComponent,
       },
       {
         path: 'auth',

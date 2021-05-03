@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CartService } from '../../core/services/cart.service';
-import { ProductCart } from '../../share/models/productCart.model';
+// import { ProductCart } from '../../share/models/productCart.model';
+import { Product } from '../../share/models/product.model';
 
 @Component({
   selector: 'app-cart-page',
@@ -10,11 +11,13 @@ import { ProductCart } from '../../share/models/productCart.model';
   styleUrls: ['./cart-page.component.css'],
 })
 export class CartPageComponent implements OnInit {
-  products: ProductCart[];
+  products: Product[];
   constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit() {
-    this.products = this.cartService.getProducts();
+    this.cartService.cart.subscribe((products) => {
+      this.products = products;
+    });
   }
 
   onClick() {
