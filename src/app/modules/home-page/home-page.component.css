@@ -1,0 +1,15 @@
+.hero {
+  width: 99%;
+  background-image: url("../../../assets/images/hero.jpeg");
+  height: 400px;
+  background-size: cover;
+  z-index: 1;
+  position: relative;
+}
+
+.hero__title {
+  position: absolute;
+  top: 35%;
+  right: 15%;
+  z-index: 2;
+}

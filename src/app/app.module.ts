@@ -15,7 +15,7 @@ import { PoliticyPageComponent } from './modules/politicy-page/politicy-page.com
 import { OrdersPageComponent } from './modules/orders-page/orders-page.component';
 import { PageNotFountPageComponent } from './modules/page-not-fount-page/page-not-fount-page.component';
 import { CheckOutPageComponent } from './modules/check-out-page/check-out-page.component';
-import { BlogPageComponent } from './modules/blog-page/blog-page.component';
+import { PortafolioPageComponent } from './modules/portafolio-page/portafolio-page.component';
 import { HeaderComponent } from './share/components/header/header.component';
 import { FooterComponent } from './share/components/footer/footer.component';
 import { LayoutComponent } from './modules/layout/layout.component';
@@ -42,7 +42,7 @@ import { ProductDetailComponent } from './modules/store-page/products/product-de
     OrdersPageComponent,
     PageNotFountPageComponent,
     CheckOutPageComponent,
-    BlogPageComponent,
+    PortafolioPageComponent,
     HeaderComponent,
     FooterComponent,
     LayoutComponent,

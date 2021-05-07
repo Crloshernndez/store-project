@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" style="display: flex; align-items: center">
   <div class="col-md-2">
     <img style="width: 50px" src="{{ product.image }}" alt="imagen" />
   </div>
@@ -6,7 +6,14 @@
     <p>{{ product.name }}</p>
   </div>
   <div class="col-md-2">
-    <p>{{ product.quantity }}</p>
+    <h4>
+      <span
+        (click)="increaseProduct(product)"
+        style="cursor: pointer"
+        class="glyphicon glyphicon-plus"
+      ></span>
+      {{ product.quantity }}
+    </h4>
   </div>
   <div class="col-md-2">
     <p>$ {{ product.price | number: "1.0-2" }}</p>

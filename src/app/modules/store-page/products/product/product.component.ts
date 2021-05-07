@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Product } from '../../../../share/models/product.model';
-import { CartService } from '../../../../core/services/cart.service';
 import { AuthService } from '../../../../core/authentication/auth.service';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-product',
@@ -13,23 +13,26 @@ export class ProductComponent implements OnInit {
   //variable que recibira contenido desde modulo padre
   @Input() product: Product;
   isAuthenticate: boolean;
+  userId: string;
 
   constructor(
-    private cartService: CartService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {}
-
-  onClick(product: Product) {
-    this.cartService.addProduct(product);
-  }
 
   ngOnInit() {
     this.authService.user.subscribe((user) => {
       if (user) {
         this.isAuthenticate = true;
+        this.userId = user.id;
       } else {
         this.isAuthenticate = false;
       }
     });
+  }
+
+  //METODO PARA AGREGAR EL PRODUCTO AL CARRITO
+  onClick(product: Product) {
+    this.userService.addProductToCart(this.userId, product);
   }
 }

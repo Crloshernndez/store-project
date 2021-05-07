@@ -79,6 +79,7 @@ export class AuthService {
   logOut() {
     this.user.next(null);
     localStorage.removeItem('userData');
+    this.router.navigate(['/']);
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
@@ -101,6 +102,7 @@ export class AuthService {
     const loaderUser = new User(
       userData.email,
       userData.id,
+      [],
       userData._token,
       new Date(userData._tokenExpirationDate)
     );
@@ -129,7 +131,7 @@ export class AuthService {
     expiresIn: string
   ) {
     const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
-    const user = new User(email, id, token, expirationDate);
+    const user = new User(email, id, [], token, expirationDate);
     this.user.next(user);
     this.autoLogOut(+expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));

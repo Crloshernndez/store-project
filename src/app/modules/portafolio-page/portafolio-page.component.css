@@ -1,0 +1,27 @@
+.flexbox {
+  height: 100vw;
+  width: 100%;
+  display: flex;
+
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.flexbox:hover img {
+  opacity: 0.6;
+}
+
+.flexbox .item {
+  position: relative;
+  width: 33.33%;
+}
+
+.flexbox .item img {
+  width: 100%;
+  display: block;
+  transition: all 0.8s;
+}
+
+.flexbox .item:hover img {
+  opacity: 1;
+}

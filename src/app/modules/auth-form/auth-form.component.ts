@@ -3,6 +3,8 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
+import { UserService } from '../../core/services/user.service';
+
 import {
   AuthService,
   authResponseData,
@@ -19,7 +21,11 @@ export class AuthFormComponent implements OnInit {
   loading: boolean = false;
   error: string = null; // propiedad que almacenara el mensaje del error
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -48,6 +54,7 @@ export class AuthFormComponent implements OnInit {
     authObs.subscribe(
       (data) => {
         console.log(data);
+        this.userService.getCart(data.localId);
         this.loading = false;
       },
       (error) => {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { CartService } from '../../../core/services/cart.service';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-summary',
@@ -10,10 +10,10 @@ import { CartService } from '../../../core/services/cart.service';
 export class SummaryComponent implements OnInit {
   subtotal = 0;
   total;
-  constructor(private cartService: CartService) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.cartService.cart.subscribe((products) => {
+    this.userService.cart$.subscribe((products) => {
       this.total = products.reduce((sum, { price }) => sum + price, 0);
     });
   }

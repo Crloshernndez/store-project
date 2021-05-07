@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomePageComponent } from './modules/home-page/home-page.component';
 import { AboutUsPageComponent } from './modules/about-us-page/about-us-page.component';
-import { BlogPageComponent } from './modules/blog-page/blog-page.component';
+import { PortafolioPageComponent } from './modules/portafolio-page/portafolio-page.component';
 import { CartPageComponent } from './modules/cart-page/cart-page.component';
 import { CheckOutPageComponent } from './modules/check-out-page/check-out-page.component';
 import { CoursesPageComponent } from './modules/courses-page/courses-page.component';
@@ -30,8 +30,8 @@ const routes: Routes = [
         component: AboutUsPageComponent,
       },
       {
-        path: 'blog',
-        component: BlogPageComponent,
+        path: 'portafolio',
+        component: PortafolioPageComponent,
       },
       {
         path: 'cart',
