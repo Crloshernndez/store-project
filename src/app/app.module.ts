@@ -1,7 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+// import { AngularFireModule } from '@angular/fire';
+// import { AngularFireDatabaseModule } from '@angular/fire/database';
 
+// import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -56,7 +59,14 @@ import { ProductDetailComponent } from './modules/store-page/products/product-de
     SummaryComponent,
     ProductDetailComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    // AngularFireDatabaseModule,
+    // AngularFireModule.initializeApp(environment.FirebaseConfig),
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

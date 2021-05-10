@@ -14,6 +14,7 @@ export class ProductComponent implements OnInit {
   @Input() product: Product;
   isAuthenticate: boolean;
   userId: string;
+  // loading: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -33,6 +34,8 @@ export class ProductComponent implements OnInit {
 
   //METODO PARA AGREGAR EL PRODUCTO AL CARRITO
   onClick(product: Product) {
+    // this.loading = true;
     this.userService.addProductToCart(this.userId, product);
+    // this.loading = false;
   }
 }

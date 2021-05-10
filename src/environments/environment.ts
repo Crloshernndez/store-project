@@ -4,7 +4,16 @@
 
 export const environment = {
   production: false,
-  FirebaseApiKey: 'AIzaSyDN2kZ0qr_3dPX6hYnvF2itEFnMIWwqr1E',
+  FirebaseConfig: {
+    apiKey: 'AIzaSyDN2kZ0qr_3dPX6hYnvF2itEFnMIWwqr1E',
+    authDomain: 'yohana-store.firebaseapp.com',
+    databaseURL: 'https://yohana-store-default-rtdb.firebaseio.com',
+    projectId: 'yohana-store',
+    storageBucket: 'yohana-store.appspot.com',
+    messagingSenderId: '702229223660',
+    appId: '1:702229223660:web:ef2816138698a3618a6dc9',
+    measurementId: 'G-5C1TV4L7DS',
+  },
 };
 
 /*

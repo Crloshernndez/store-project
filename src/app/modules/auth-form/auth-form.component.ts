@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../core/services/user.service';
+import { DataStorageService } from '../../core/services/data-storage.service';
+import { User } from '../../share/models/user.model';
 
 import {
   AuthService,
@@ -24,7 +26,8 @@ export class AuthFormComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private dataStorageService: DataStorageService
   ) {}
 
   ngOnInit(): void {}
@@ -54,7 +57,17 @@ export class AuthFormComponent implements OnInit {
     authObs.subscribe(
       (data) => {
         console.log(data);
-        this.userService.getCart(data.localId);
+
+        // LOGICA PARA CREAR EL USUARIO QUE SE ESTA REGISTRANDO
+        if (!this.isLoginMode) {
+          this.dataStorageService
+            .createUser(new User(data.email, data.localId, []))
+            .subscribe(() => {
+              console.log('usuario creado');
+            });
+        }
+
+        this.userService.getUserCart(data.localId);
         this.loading = false;
       },
       (error) => {

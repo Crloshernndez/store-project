@@ -1,40 +1,36 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { User } from '../../share/models/user.model';
 import { Product } from '../../share/models/product.model';
 import { ProductsService } from './products.service';
+import { DataStorageService } from './data-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   cart$ = new BehaviorSubject<Product[]>([]);
-  private cart: Product[];
-  private users: User[] = [
-    new User('cehchino33@gmail.com', 'fPirv7O1JCQB6lz8nFGmVoqzN2q2', []),
-    new User(
-      'hernandez1989carlos@gmail.com',
-      'vxbBv9PZRBh93zgIwgKhtSJL6tv2',
-      []
-    ),
-  ];
-  constructor(private productService: ProductsService) {}
+  private cart: Product[] = [];
+
+  constructor(
+    private productService: ProductsService,
+    private db: DataStorageService
+  ) {}
 
   // METODO PARA OBTENER EL CARRITO DE UN USUARIO
-  getCart(id: string) {
-    const user = this.users.find((user) => {
-      return user.id === id;
+  getUserCart(id: string) {
+    this.db.getUser(id).subscribe((user) => {
+      // console.log('aca');
+
+      this.cart = user.cart;
+      this.cart$.next(this.cart);
     });
-    this.cart = user.cart;
-    this.cart$.next(this.cart);
   }
 
   // METODO PARA AGREGAR PRODUCTOS AL CARRITO DE UN USUARIO
   addProductToCart(id: string, product: Product) {
     // OBTENEMOS EL CARRITO DEL USUARIO
-    const user = this.users.find((user) => user.id === id);
-    const cart = user.cart;
+    const cart = this.cart;
 
     let cartUpdated;
     let updatedProduct;
@@ -62,26 +58,25 @@ export class UserService {
     }
 
     // SE ACTUALIZA EL CARRITO DEL USUARIO
-    this.users.find((user) => user.id === id).cart = cartUpdated;
-
     this.cart = cartUpdated;
+    this.db.updateUser(id, this.cart);
+
     this.cart$.next(this.cart);
   }
 
   // METODO PARA ELIMINAR TODOS LOS PRODUCTOS DE EL CARRITO DE UN USUARIO
   deleteAllProducts(id: string) {
-    this.users.find((user) => user.id === id).cart = [];
+    //vaciamos carrito
     this.cart = [];
+    // actualizamos userCart con el carrito
+    this.db.updateUser(id, this.cart);
     this.cart$.next(this.cart);
   }
 
   // MATODO PARA ELIMINAR UN PRODUCTO DEL CARRITO DE UN USUARIO
   deleteProduct(id: string, product) {
     //OBTENER EL CARRITO DEL USUARIO
-    const user = this.users.find((user) => {
-      return user.id === id;
-    });
-    const cart = user.cart;
+    const cart = this.cart;
 
     let cartUpdated;
     let updatedProduct;
@@ -103,13 +98,15 @@ export class UserService {
 
       cartUpdated = [...cart];
       cartUpdated[productIndex] = updatedProduct;
+      //LOGICA SI SOLO EXISTE UN PRODUCTO DEL TIPO A ELIMINAR
     } else {
       cartUpdated = [...cart];
       cartUpdated.splice(productIndex, 1);
     }
     // SE ACTUALIZA CARRITO DEL USUARIO
-    this.users.find((user) => user.id === id).cart = cartUpdated;
+
     this.cart = cartUpdated;
+    this.db.updateUser(id, this.cart);
     this.cart$.next(this.cart);
   }
 }
