@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../../../core/authentication/auth.service';
-
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
@@ -21,7 +20,6 @@ export class HeaderComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-
     private userService: UserService
   ) {}
 

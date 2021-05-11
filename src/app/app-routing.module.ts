@@ -1,20 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { HomePageComponent } from './modules/home-page/home-page.component';
-import { AboutUsPageComponent } from './modules/about-us-page/about-us-page.component';
-import { PortafolioPageComponent } from './modules/portafolio-page/portafolio-page.component';
-import { CartPageComponent } from './modules/cart-page/cart-page.component';
-import { CheckOutPageComponent } from './modules/check-out-page/check-out-page.component';
-import { CoursesPageComponent } from './modules/courses-page/courses-page.component';
-import { OrdersPageComponent } from './modules/orders-page/orders-page.component';
-import { PaymentPageComponent } from './modules/payment-page/payment-page.component';
-import { PoliticyPageComponent } from './modules/politicy-page/politicy-page.component';
-import { StorePageComponent } from './modules/store-page/store-page.component';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { PageNotFountPageComponent } from './modules/page-not-fount-page/page-not-fount-page.component';
 import { LayoutComponent } from './modules/layout/layout.component';
-import { AuthFormComponent } from './modules/auth-form/auth-form.component';
-import { AuthGuardService } from './core/guards/auth-guard.service';
-import { ProductDetailComponent } from './modules/store-page/products/product-detail/product-detail.component';
 
 const routes: Routes = [
   {
@@ -23,55 +10,76 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomePageComponent,
+        loadChildren: () =>
+          import('./modules/home-page/home.module').then((m) => m.HomeModule),
       },
       {
         path: 'about-us',
-        component: AboutUsPageComponent,
+        loadChildren: () =>
+          import('./modules/about-us-page/about-us.module').then(
+            (m) => m.AboutUsModule
+          ),
       },
       {
         path: 'portafolio',
-        component: PortafolioPageComponent,
+        loadChildren: () =>
+          import('./modules/portafolio-page/portafolio.module').then(
+            (m) => m.PortafolioModule
+          ),
       },
       {
         path: 'cart',
-        component: CartPageComponent,
-        canActivate: [AuthGuardService],
+        loadChildren: () =>
+          import('./modules/cart-page/cart.module').then((m) => m.CartModule),
       },
       {
         path: 'check-out',
-        component: CheckOutPageComponent,
-        canActivate: [AuthGuardService],
+        loadChildren: () =>
+          import('./modules/check-out-page/check-out.module').then(
+            (m) => m.CheckOutModule
+          ),
       },
       {
         path: 'courses',
-        component: CoursesPageComponent,
+        loadChildren: () =>
+          import('./modules/courses-page/courses.module').then(
+            (m) => m.CoursesModule
+          ),
       },
       {
         path: 'orders',
-        component: OrdersPageComponent,
-        canActivate: [AuthGuardService],
+        loadChildren: () =>
+          import('./modules/orders-page/orders.module').then(
+            (m) => m.OrdersModule
+          ),
       },
       {
         path: 'payment',
-        component: PaymentPageComponent,
-        canActivate: [AuthGuardService],
+        loadChildren: () =>
+          import('./modules/payment-page/payment.module').then(
+            (m) => m.PaymentModule
+          ),
       },
       {
         path: 'policies',
-        component: PoliticyPageComponent,
+        loadChildren: () =>
+          import('./modules/politicy-page/politicy.module').then(
+            (m) => m.PoliticyModule
+          ),
       },
       {
         path: 'store',
-        component: StorePageComponent,
-      },
-      {
-        path: 'product/:id',
-        component: ProductDetailComponent,
+        loadChildren: () =>
+          import('./modules/store-page/store.module').then(
+            (m) => m.StoreModule
+          ),
       },
       {
         path: 'auth',
-        component: AuthFormComponent,
+        loadChildren: () =>
+          import('./modules/auth-form/auth-form.module').then(
+            (m) => m.AuthFormModule
+          ),
       },
     ],
   },
@@ -82,7 +90,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
