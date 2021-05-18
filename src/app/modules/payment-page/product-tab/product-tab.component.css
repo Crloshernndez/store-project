@@ -1,0 +1,9 @@
+.productTab__container {
+  border: 1px solid wheat;
+}
+
+.product {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}

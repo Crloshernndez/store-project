@@ -3,17 +3,17 @@
     <div class="row">
       <div class="col-xs-12 col-md-6 col-md-offset-3">
         <app-alert
-          *ngIf="error"
-          [message]="error"
+          *ngIf="errorMessage"
+          [message]="errorMessage"
           (close)="onClose()"
         ></app-alert>
-        <div *ngIf="loading" style="text-align: center; margin-top: 5vh">
+        <div *ngIf="loadingMode" style="text-align: center; margin-top: 5vh">
           <app-loading-spinner></app-loading-spinner>
         </div>
         <form
           #authForm="ngForm"
           (ngSubmit)="onSubmit(authForm)"
-          *ngIf="!loading"
+          *ngIf="!loadingMode"
         >
           <div class="col-xs-12">
             <div class="form-group">
@@ -53,7 +53,7 @@
                 class="btn btn-success"
                 [disabled]="!authForm.valid"
               >
-                {{ isLoginMode ? "Login" : "Sing Up" }}
+                {{ loginMode ? "Login" : "Sing Up" }}
               </button>
               <button
                 type="button"
@@ -67,7 +67,7 @@
             <div style="text-align: center" class="col-xs-12">
               <a
                 style="cursor: pointer"
-                *ngIf="isLoginMode"
+                *ngIf="loginMode"
                 (click)="onSwitchMode()"
                 >Register!!!</a
               >

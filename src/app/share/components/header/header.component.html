@@ -27,7 +27,7 @@
         </li>
         <li
           routerLinkActive="active"
-          *ngIf="isAuthenticaded"
+          *ngIf="userAuthenticaded"
           style="cursor: pointer"
         >
           <a routerLink="/orders">Orders</a>
@@ -38,18 +38,18 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <button
-          *ngIf="isAuthenticaded"
+          *ngIf="userAuthenticaded"
           routerLinkActive="active"
           (click)="onClick()"
           class="btn btn-default btn-lg"
         >
           <span class="glyphicon glyphicon-shopping-cart">
-            <span> {{ quantity }}</span>
+            <span> {{ quantityCartProducts }}</span>
           </span>
         </button>
         <li routerLinkActive="active">
           <a style="cursor: pointer" (click)="onHandleLog()">{{
-            isAuthenticaded ? "Log Out" : "Log In"
+            userAuthenticaded ? "Log Out" : "Log In"
           }}</a>
         </li>
       </ul>

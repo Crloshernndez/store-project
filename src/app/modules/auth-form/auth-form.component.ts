@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../core/services/user.service';
-import { DataStorageService } from '../../core/services/data-storage.service';
+import { CartService } from '../../core/services/cart.service';
 import { User } from '../../share/models/user.model';
 
 import {
   AuthService,
-  authResponseData,
+  modelOfRequestResponse,
 } from 'src/app/core/authentication/auth.service';
 
 @Component({
@@ -19,15 +19,15 @@ import {
 })
 export class AuthFormComponent implements OnInit {
   // propiedades
-  isLoginMode: boolean = true;
-  loading: boolean = false;
-  error: string = null; // propiedad que almacenara el mensaje del error
+  loginMode: boolean = true;
+  loadingMode: boolean = false;
+  errorMessage: string = null; // propiedad que almacenara el mensaje del error
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private userService: UserService,
-    private dataStorageService: DataStorageService
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {}
@@ -41,39 +41,35 @@ export class AuthFormComponent implements OnInit {
     const password = authform.value.password;
 
     // variable que guardara el observeble
-    let authObs: Observable<authResponseData>;
+    let authObs$: Observable<modelOfRequestResponse>;
 
     // si el usuario se quiere registrar
-    if (!this.isLoginMode) {
-      authObs = this.authService.singUp(email, password);
+    if (!this.loginMode) {
+      authObs$ = this.authService.singUpUser(email, password);
       // si el usuario se quiere logear
     } else {
-      authObs = this.authService.singIn(email, password);
+      authObs$ = this.authService.singInUser(email, password);
     }
 
-    this.loading = true;
+    this.loadingMode = true;
 
     // logica para la subscipcion de los observables
-    authObs.subscribe(
-      (data) => {
-        console.log(data);
-
+    authObs$.subscribe(
+      (userInfo) => {
         // LOGICA PARA CREAR EL USUARIO QUE SE ESTA REGISTRANDO
-        if (!this.isLoginMode) {
-          this.dataStorageService
-            .createUser(new User(data.email, data.localId, []))
+        if (!this.loginMode) {
+          this.userService
+            .createUser(new User(userInfo.email, userInfo.localId, []))
             .subscribe(() => {
               console.log('usuario creado');
             });
         }
-
-        this.userService.getUserCart(data.localId);
-        this.loading = false;
+        this.cartService.getUserCart(userInfo.localId);
+        this.loadingMode = false;
       },
       (error) => {
-        // asignamos a la propiedad error el mensaje del error
-        this.error = error;
-        this.loading = false;
+        this.errorMessage = error;
+        this.loadingMode = false;
       }
     );
     authform.reset();
@@ -81,12 +77,12 @@ export class AuthFormComponent implements OnInit {
 
   // metodo para cambiar el funcion del formulario
   onSwitchMode() {
-    this.isLoginMode = !this.isLoginMode;
+    this.loginMode = !this.loginMode;
   }
 
   // metodo para cerrar el modal del error
   onClose() {
-    this.error = null;
+    this.errorMessage = null;
   }
 
   // metodo para salir del formulario

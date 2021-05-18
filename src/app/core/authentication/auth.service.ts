@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
 
-import { environment } from '../../../environments/environment';
 import { User } from '../../share/models/user.model';
+import { environment } from '../../../environments/environment';
+import { UserService } from '../services/user.service';
 
 // interfaz de respuesta desde firebase para authentication
-export interface authResponseData {
+export interface modelOfRequestResponse {
   idToken: string;
   email: string;
   refreshToken: string;
@@ -22,15 +23,24 @@ export interface authResponseData {
 })
 export class AuthService {
   // propiedades
-  user = new BehaviorSubject<User>(null);
+  user$ = new BehaviorSubject<User>(null);
+  userInstance: User;
+  expirationTimeOfToken: Date;
   tokenExpirationTimer: any = null;
+  localStorageData: any;
+  activeUser: any;
+  existingUser;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   // metodo para registrar usuario
-  singUp(email: string, password: string) {
+  public singUpUser(email: string, password: string) {
     return this.http
-      .post<authResponseData>(
+      .post<modelOfRequestResponse>(
         `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.FirebaseConfig.apiKey}`,
         {
           email: email,
@@ -39,22 +49,22 @@ export class AuthService {
         }
       )
       .pipe(
-        catchError(this.handleError),
-        tap((data) => {
-          this.handleAuthentication(
-            data.email,
-            data.localId,
-            data.idToken,
-            data.expiresIn
+        catchError(this.handleErrorOfRequest),
+        tap((response) => {
+          this.handleUserAuthentication(
+            response.email,
+            response.localId,
+            response.idToken,
+            response.expiresIn
           );
         })
       );
   }
 
   // metodo para logear usuario
-  singIn(email: string, password: string) {
+  public singInUser(email: string, password: string) {
     return this.http
-      .post<authResponseData>(
+      .post<modelOfRequestResponse>(
         `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.FirebaseConfig.apiKey}`,
         {
           email: email,
@@ -63,21 +73,79 @@ export class AuthService {
         }
       )
       .pipe(
-        catchError(this.handleError),
-        tap((data) => {
-          this.handleAuthentication(
-            data.email,
-            data.localId,
-            data.idToken,
-            data.expiresIn
+        catchError(this.handleErrorOfRequest),
+        tap((response) => {
+          this.handleUserAuthentication(
+            response.email,
+            response.localId,
+            response.idToken,
+            response.expiresIn
           );
         })
       );
   }
 
-  // metodo para desloguear usuario
-  logOut() {
-    this.user.next(null);
+  // metodo para autenticar usuario
+  private handleUserAuthentication(
+    email: string,
+    id: string,
+    token: string,
+    tokenExpirationTime: string
+  ) {
+    this.userService.getUser(id).subscribe((user) => {
+      this.existingUser = user;
+      this.createUserInstance(email, id, token, tokenExpirationTime);
+      localStorage.setItem('userData', JSON.stringify(this.userInstance));
+      this.router.navigate(['/']);
+    });
+  }
+
+  private createUserInstance(
+    email: string,
+    id: string,
+    token: string,
+    tokenExpirationTime: string
+  ) {
+    this.getexpirationTimeOfToken(tokenExpirationTime);
+    if (this.existingUser) {
+      this.userInstance = new User(
+        email,
+        id,
+        this.existingUser.cart,
+        this.existingUser.orders,
+        token,
+        this.expirationTimeOfToken
+      );
+    } else {
+      console.log('paso por aqui');
+
+      this.userInstance = new User(
+        email,
+        id,
+        [],
+        [],
+        token,
+        this.expirationTimeOfToken
+      );
+    }
+    this.user$.next(this.userInstance);
+  }
+
+  private getexpirationTimeOfToken(tokenExpirationTime: string) {
+    this.expirationTimeOfToken = new Date(
+      new Date().getTime() + +tokenExpirationTime * 1000
+    );
+    this.autoLogOutOfUser(+tokenExpirationTime * 1000);
+  }
+
+  private autoLogOutOfUser(timeOfTokenExpiration: number) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logOutUser();
+    }, timeOfTokenExpiration);
+  }
+
+  public logOutUser() {
+    this.user$.next(null);
     localStorage.removeItem('userData');
     this.router.navigate(['/']);
     if (this.tokenExpirationTimer) {
@@ -87,59 +155,39 @@ export class AuthService {
   }
 
   // metodo para logear automaticamente
-  autoLogin() {
-    const userData: {
-      email: string;
-      id: string;
-      _token: string;
-      _tokenExpirationDate: string;
-    } = JSON.parse(localStorage.getItem('userData'));
+  public autoLoginOfUser() {
+    this.getActiveUser();
 
-    if (!userData) {
+    if (this.activeUser.token) {
+      this.user$.next(this.activeUser);
+      const durationOfTokenExpiration =
+        new Date(this.activeUser._tokenExpirationDate).getTime() -
+        new Date().getTime();
+      this.autoLogOutOfUser(durationOfTokenExpiration);
+    }
+  }
+
+  private getActiveUser() {
+    this.getLocalStorageData();
+    if (!this.localStorageData) {
       return;
     }
-
-    const loaderUser = new User(
-      userData.email,
-      userData.id,
+    this.activeUser = new User(
+      this.localStorageData.email,
+      this.localStorageData.id,
       [],
-      userData._token,
-      new Date(userData._tokenExpirationDate)
+      [],
+      this.localStorageData._token,
+      new Date(this.localStorageData._tokenExpirationDate)
     );
-
-    if (loaderUser.token) {
-      this.user.next(loaderUser);
-      const expirationDuration =
-        new Date(userData._tokenExpirationDate).getTime() -
-        new Date().getTime();
-      this.autoLogOut(expirationDuration);
-    }
   }
 
-  // metodo para desloguear automaticamente
-  autoLogOut(expirationDuration: number) {
-    this.tokenExpirationTimer = setTimeout(() => {
-      this.logOut();
-    }, expirationDuration);
-  }
-
-  // metodo para autenticar usuario
-  private handleAuthentication(
-    email: string,
-    id: string,
-    token: string,
-    expiresIn: string
-  ) {
-    const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
-    const user = new User(email, id, [], token, expirationDate);
-    this.user.next(user);
-    this.autoLogOut(+expiresIn * 1000);
-    localStorage.setItem('userData', JSON.stringify(user));
-    this.router.navigate(['/']);
+  private getLocalStorageData() {
+    this.localStorageData = JSON.parse(localStorage.getItem('userData'));
   }
 
   // metodo para manejar errores
-  private handleError(resError: HttpErrorResponse) {
+  private handleErrorOfRequest(resError: HttpErrorResponse) {
     let errorMessage = 'An Unknown Error Occurred!!';
 
     if (!resError.error || !resError.error.error) {

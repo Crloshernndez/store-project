@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { AuthService } from '../../../core/authentication/auth.service';
+import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../share/models/product.model';
-import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-cart-product',
@@ -11,16 +11,16 @@ import { UserService } from '../../../core/services/user.service';
 })
 export class CartProductComponent implements OnInit {
   @Input() product: Product;
-  userId: string;
+  idUserActive: string;
   constructor(
     private authService: AuthService,
-    private userService: UserService
+    private cartService: CartService
   ) {}
 
   ngOnInit() {
-    this.authService.user.subscribe((user) => {
-      if (user) {
-        this.userId = user.id;
+    this.authService.user$.subscribe((userActive) => {
+      if (userActive) {
+        this.idUserActive = userActive.id;
       } else {
         console.log('not connected user');
       }
@@ -28,10 +28,10 @@ export class CartProductComponent implements OnInit {
   }
 
   onClick(product) {
-    this.userService.deleteProduct(this.userId, product);
+    this.cartService.deleteProductFromCart(this.idUserActive, product);
   }
 
   increaseProduct(product: Product) {
-    this.userService.addProductToCart(this.userId, product);
+    this.cartService.addProductToUserCart(this.idUserActive, product);
   }
 }

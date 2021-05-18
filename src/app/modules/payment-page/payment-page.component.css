@@ -1,0 +1,48 @@
+.payment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  /* height: 100%; */
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 50;
+}
+
+.payment__container {
+  position: relative;
+  top: 3vh;
+  left: 25vw;
+  width: 50vw;
+  /* height: 100%; */
+  padding: 10px;
+  z-index: 100;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.99);
+}
+
+.payment__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content__information {
+  padding: 10px;
+}
+
+.product__container {
+  border: 1px solid wheat;
+}
+
+.product,
+.shipping,
+.total {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.methodToPay {
+  display: flex;
+  justify-content: space-evenly;
+}

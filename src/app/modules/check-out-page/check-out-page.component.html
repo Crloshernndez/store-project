@@ -1,4 +1,152 @@
-<p>check-out-page works!</p>
-<button class="btn btn-success" type="button" (click)="onClick()">
-  continue
-</button>
+<div class="checkout">
+  <div class="checkout__container">
+    <h3>checkout</h3>
+    <hr />
+    <h4>shipping Address</h4>
+    <form
+      [formGroup]="shippingForm"
+      (ngSubmit)="onSubmit()"
+      class="checkout__form"
+    >
+      <div class="form__left">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="name">First name</label>
+            <input
+              formControlName="name"
+              type="text"
+              id="name"
+              class="form-control"
+            />
+            <label
+              *ngIf="
+                !shippingForm.get('name').valid &&
+                shippingForm.get('name').touched
+              "
+              class="help-block"
+              >Please a name</label
+            >
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input
+              formControlName="address"
+              type="text"
+              id="address"
+              class="form-control"
+            />
+            <label
+              *ngIf="
+                !shippingForm.get('address').valid &&
+                shippingForm.get('address').touched
+              "
+              >Please address</label
+            >
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input
+              formControlName="city"
+              type="text"
+              id="city"
+              class="form-control"
+            />
+            <label
+              *ngIf="
+                !shippingForm.get('city').valid &&
+                shippingForm.get('city').touched
+              "
+              >Please enter city</label
+            >
+          </div>
+          <div class="form-group">
+            <label for="zipcode">Zip postal code</label>
+            <input
+              formControlName="zipcode"
+              type="text"
+              id="zipcode"
+              class="form-control"
+            />
+            <label
+              *ngIf="
+                !shippingForm.get('zipcode').valid &&
+                shippingForm.get('zipcode').touched
+              "
+              >Please enter zip code</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="form__rigth">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="lastname">Last name</label>
+            <input
+              formControlName="lastname"
+              type="text"
+              id="lastname"
+              class="form-control"
+            />
+            <label
+              *ngIf="
+                !shippingForm.get('lastname').valid &&
+                shippingForm.get('lastname').touched
+              "
+              >Please lastname</label
+            >
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              formControlName="email"
+              type="email"
+              id="email"
+              class="form-control"
+            />
+            <label
+              *ngIf="
+                !shippingForm.get('email').valid &&
+                shippingForm.get('email').touched
+              "
+              >Please enter email</label
+            >
+          </div>
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input
+              formControlName="country"
+              type="text"
+              id="country"
+              class="form-control"
+            />
+            <label
+              *ngIf="
+                !shippingForm.get('country').valid &&
+                shippingForm.get('country').touched
+              "
+              >Please enter country</label
+            >
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="col-md-6 col-md-offset-3">Total shipping .... 10.25$</h4>
+      </div>
+    </div>
+    <div class="checkout__action">
+      <button class="btn btn-default" (click)="onClick()" type="button">
+        back
+      </button>
+      <button
+        (click)="sendData()"
+        [disabled]="!shippingForm.valid"
+        class="btn btn-success"
+        type="submit"
+      >
+        next
+      </button>
+    </div>
+  </div>
+</div>

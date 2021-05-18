@@ -4,9 +4,10 @@ import { RouterModule } from '@angular/router';
 
 import { AuthGuardService } from '../../core/guards/auth-guard.service';
 import { PaymentPageComponent } from './payment-page.component';
+import { ProductTabComponent } from './product-tab/product-tab.component';
 
 @NgModule({
-  declarations: [PaymentPageComponent],
+  declarations: [PaymentPageComponent, ProductTabComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([

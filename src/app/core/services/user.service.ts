@@ -1,112 +1,78 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map, exhaustMap } from 'rxjs/operators';
 
-import { Product } from '../../share/models/product.model';
-import { ProductsService } from './products.service';
-import { DataStorageService } from './data-storage.service';
+import { User } from '../../share/models/user.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  cart$ = new BehaviorSubject<Product[]>([]);
-  private cart: Product[] = [];
+  updatedUser;
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    private productService: ProductsService,
-    private db: DataStorageService
-  ) {}
-
-  // METODO PARA OBTENER EL CARRITO DE UN USUARIO
-  getUserCart(id: string) {
-    this.db.getUser(id).subscribe((user) => {
-      // console.log('aca');
-
-      this.cart = user.cart;
-      this.cart$.next(this.cart);
-    });
+  public createUser(newUser: User) {
+    return this.http.post(
+      `${environment.FirebaseConfig.databaseURL}/users.json`,
+      newUser
+    );
   }
 
-  // METODO PARA AGREGAR PRODUCTOS AL CARRITO DE UN USUARIO
-  addProductToCart(id: string, product: Product) {
-    // OBTENEMOS EL CARRITO DEL USUARIO
-    const cart = this.cart;
+  private getUsers() {
+    return this.http
+      .get(`${environment.FirebaseConfig.databaseURL}/users.json`)
+      .pipe(
+        map((data) => {
+          const users = Object.values(data);
+          users.map((user) => {
+            return {
+              ...user,
+              cart: user.cart ? user.cart : [],
+              orders: user.orders ? user.orders : [],
+            };
+          });
+        })
+      );
+  }
 
-    let cartUpdated;
-    let updatedProduct;
-    let quantity = 1;
+  public getUser(id: string) {
+    return this.http
+      .get(`${environment.FirebaseConfig.databaseURL}/users.json`)
+      .pipe(
+        map((users) => {
+          const arrayOfUsers = Object.entries(users);
+          const requestedUser = arrayOfUsers.find((user) => user[1].id === id);
+          return {
+            ...requestedUser[1],
+            userId: requestedUser[0],
+            cart: requestedUser[1].cart ? requestedUser[1].cart : [],
+            orders: requestedUser[1].orders ? requestedUser[1].orders : [],
+          };
+        })
+      );
+  }
 
-    // OBTENEMOS LOS VALORES INICIALES DEL PRODUCTO
-    let selectedProduct = this.productService.getProductById(product.id);
-
-    // OBTENEMOS EL PRODUCTO A AGREGAR EN EL CARRITO SI EXISTE
-    const existingProductIndex = cart.findIndex((p) => p.id === product.id);
-    const existingProduct = cart[existingProductIndex];
-
-    // LOGICA PARA AGREGAR UN PRODUCTO EXISTENE
-    if (existingProduct) {
-      updatedProduct = { ...existingProduct };
-      updatedProduct.quantity = updatedProduct.quantity + 1;
-      updatedProduct.price = selectedProduct.price * updatedProduct.quantity;
-      cartUpdated = [...cart];
-      cartUpdated[existingProductIndex] = updatedProduct;
-      // LOGICA SI EL PRODUCTO NO EXISTE
+  public updateUser(id: string, value) {
+    this.getUser(id)
+      .pipe(
+        exhaustMap((user) => {
+          this.getUpdatedUser(user, value);
+          return this.http.put(
+            `${environment.FirebaseConfig.databaseURL}/users/${user.userId}.json`,
+            this.updatedUser
+          );
+        })
+      )
+      .subscribe();
+  }
+  private getUpdatedUser(user: User, value) {
+    if (!value.products) {
+      this.updatedUser = { ...user, cart: value };
+      console.log('actualizo cart');
     } else {
-      product.quantity = quantity;
-      updatedProduct = product;
-      cartUpdated = [...cart, updatedProduct];
+      this.updatedUser = { ...user, orders: value };
+      console.log('actualizo order');
     }
-
-    // SE ACTUALIZA EL CARRITO DEL USUARIO
-    this.cart = cartUpdated;
-    this.db.updateUser(id, this.cart);
-
-    this.cart$.next(this.cart);
-  }
-
-  // METODO PARA ELIMINAR TODOS LOS PRODUCTOS DE EL CARRITO DE UN USUARIO
-  deleteAllProducts(id: string) {
-    //vaciamos carrito
-    this.cart = [];
-    // actualizamos userCart con el carrito
-    this.db.updateUser(id, this.cart);
-    this.cart$.next(this.cart);
-  }
-
-  // MATODO PARA ELIMINAR UN PRODUCTO DEL CARRITO DE UN USUARIO
-  deleteProduct(id: string, product) {
-    //OBTENER EL CARRITO DEL USUARIO
-    const cart = this.cart;
-
-    let cartUpdated;
-    let updatedProduct;
-
-    // OBTENEMOS LOS VALORES INICIALES DEL PRODUCTO
-    let selectedProduct = this.productService.getProductById(product.id);
-    // OBTENEMOS EL INDEX DEL CARRITO DEL USUARIO DONDE ESTA EL PRODUCTO
-    const productIndex = cart.findIndex((p) => {
-      return p.id === product.id;
-    });
-
-    const productToDelete = cart[productIndex];
-
-    // LOGICA SI EXISTE MAS DE UN MISMO PRODUCTO
-    if (productToDelete.quantity > 1) {
-      updatedProduct = { ...productToDelete };
-      updatedProduct.quantity = updatedProduct.quantity - 1;
-      updatedProduct.price = selectedProduct.price * updatedProduct.quantity;
-
-      cartUpdated = [...cart];
-      cartUpdated[productIndex] = updatedProduct;
-      //LOGICA SI SOLO EXISTE UN PRODUCTO DEL TIPO A ELIMINAR
-    } else {
-      cartUpdated = [...cart];
-      cartUpdated.splice(productIndex, 1);
-    }
-    // SE ACTUALIZA CARRITO DEL USUARIO
-
-    this.cart = cartUpdated;
-    this.db.updateUser(id, this.cart);
-    this.cart$.next(this.cart);
   }
 }

@@ -25,9 +25,9 @@ export class AuthGuardService implements CanActivate {
     | UrlTree
     | Promise<boolean | UrlTree>
     | Observable<boolean | UrlTree> {
-    return this.authService.user.pipe(
-      map((user) => {
-        if (user) {
+    return this.authService.user$.pipe(
+      map((userActive) => {
+        if (userActive) {
           return true;
         } else {
           return this.router.createUrlTree(['/']);

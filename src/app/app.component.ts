@@ -8,10 +8,9 @@ import { AuthService } from './core/authentication/auth.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  title = 'yohana-project';
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.authService.autoLogin();
+    this.authService.autoLoginOfUser();
   }
 }

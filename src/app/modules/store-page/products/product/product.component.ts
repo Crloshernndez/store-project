@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { Product } from '../../../../share/models/product.model';
 import { AuthService } from '../../../../core/authentication/auth.service';
-import { UserService } from '../../../../core/services/user.service';
+import { CartService } from '../../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product',
@@ -10,32 +10,28 @@ import { UserService } from '../../../../core/services/user.service';
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-  //variable que recibira contenido desde modulo padre
   @Input() product: Product;
-  isAuthenticate: boolean;
-  userId: string;
-  // loading: boolean = false;
+  userAuthenticated: boolean;
+  idUserActive: string;
 
   constructor(
     private authService: AuthService,
-    private userService: UserService
+    private cartService: CartService
   ) {}
 
   ngOnInit() {
-    this.authService.user.subscribe((user) => {
-      if (user) {
-        this.isAuthenticate = true;
-        this.userId = user.id;
+    this.authService.user$.subscribe((userActive) => {
+      if (userActive) {
+        this.userAuthenticated = true;
+        this.idUserActive = userActive.id;
       } else {
-        this.isAuthenticate = false;
+        this.userAuthenticated = false;
       }
     });
   }
 
   //METODO PARA AGREGAR EL PRODUCTO AL CARRITO
   onClick(product: Product) {
-    // this.loading = true;
-    this.userService.addProductToCart(this.userId, product);
-    // this.loading = false;
+    this.cartService.addProductToUserCart(this.idUserActive, product);
   }
 }

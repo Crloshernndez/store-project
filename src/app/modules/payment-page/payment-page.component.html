@@ -1,4 +1,79 @@
-<p>payment-page works!</p>
-<button class="btn btn-success" type="button" (click)="onClick()">
-  continue
-</button>
+<div class="payment">
+  <div class="payment__container">
+    <div class="payment__header">
+      <h4>Payment</h4>
+      <button class="btn btn-danger" (click)="onExit()">salir</button>
+    </div>
+    <div class="payment__content">
+      <div class="content__title">
+        <h3>Order Details</h3>
+      </div>
+      <hr />
+      <div class="content__costumerInfo">
+        <div class="content__subtitle">
+          <h4>customer info</h4>
+        </div>
+        <div class="content__information">
+          <h5>
+            {{ orderData.userInformation.name }}
+            {{ orderData.userInformation.lastname }}
+          </h5>
+          <h5>{{ orderData.userInformation.email }}</h5>
+        </div>
+      </div>
+      <div class="content__shippingInfo">
+        <div class="content__subtitle">
+          <h4>shipping info</h4>
+        </div>
+        <div class="content__information">
+          <h5>
+            {{ orderData.userInformation.address }}
+          </h5>
+          <h5>{{ orderData.userInformation.city }}</h5>
+          <h5>Zip postal .... {{ orderData.userInformation.zipcode }}</h5>
+          <h5>{{ orderData.userInformation.country }}</h5>
+        </div>
+      </div>
+      <hr />
+      <div class="content__ProductsSummary">
+        <div class="content__title">
+          <h3>Products summary</h3>
+        </div>
+        <div
+          class="content__products"
+          *ngFor="let product of orderData.products"
+        >
+          <div class="product__container">
+            <app-product-tab [product]="product"></app-product-tab>
+          </div>
+        </div>
+        <br />
+        <div class="content__shipping">
+          <div class="payment__content-subtitle">
+            <h5>total shipping</h5>
+          </div>
+          <h5>$10</h5>
+        </div>
+        <hr />
+        <div class="content__total">
+          <div class="content__title">
+            <h5>total to pay</h5>
+          </div>
+          <h5>{{ total | number: "1.0-2" }}</h5>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="payment__actions">
+      <div class="content__title">
+        <h3>Method to Pay</h3>
+      </div>
+      <div class="content__actions">
+        <div class="methodToPay">
+          <button class="btn btn-success">Paypal</button>
+          <button class="btn btn-success">credit cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

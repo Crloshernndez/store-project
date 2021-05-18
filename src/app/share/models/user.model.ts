@@ -1,10 +1,12 @@
 import { Product } from './product.model';
+import { Order } from './order.model';
 
 export class User {
   constructor(
     public email: string,
     public id: string,
     public cart?: Product[],
+    public orders?: Order[],
     private _token?: string,
     private _tokenExpirationDate?: Date
   ) {}

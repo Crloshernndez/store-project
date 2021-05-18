@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserService } from '../../../core/services/user.service';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-summary',
@@ -8,13 +8,12 @@ import { UserService } from '../../../core/services/user.service';
   styleUrls: ['./summary.component.css'],
 })
 export class SummaryComponent implements OnInit {
-  subtotal = 0;
   total;
-  constructor(private userService: UserService) {}
+  constructor(private cartService: CartService) {}
 
   ngOnInit() {
-    this.userService.cart$.subscribe((products) => {
-      this.total = products.reduce((sum, { price }) => sum + price, 0);
+    this.cartService.cart$.subscribe((cartProducts) => {
+      this.total = cartProducts.reduce((sum, { price }) => sum + price, 0);
     });
   }
 }
